@@ -1,4 +1,7 @@
 const {database2: dbConfig} = require('../../config/db.config');
+const path = require('path');
+const fs = require('fs');
+const basename = path.basename(module.filename);
 
 const Sequelize = require('sequelize');
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
@@ -20,6 +23,13 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-db.tutorials = require('./tutorial.model')(sequelize, Sequelize);
+fs.readdirSync(__dirname)
+    .filter(file =>
+        (file.indexOf('.') !== 0) &&
+        (file !== basename) &&
+        (file.slice(-3) === '.js'))
+    .forEach(file => {
+    db[path.basename(file).split('.model')[0]] = require(path.resolve(__dirname, file))(sequelize, Sequelize);
+});
 
 module.exports = db;

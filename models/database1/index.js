@@ -23,7 +23,6 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-// db.tutorials = require('./tutorial.model')(sequelize, Sequelize);
 fs.readdirSync(__dirname)
     .filter(file =>
         (file.indexOf('.') !== 0) &&
@@ -31,9 +30,6 @@ fs.readdirSync(__dirname)
         (file.slice(-3) === '.js'))
     .forEach(file => {
     db[path.basename(file).split('.model')[0]] = require(path.resolve(__dirname, file))(sequelize, Sequelize);
-
-    // const model = db.Database1.import(path.resolve(__dirname, 'database1', file));
-    // db[model.name] = model;
 });
 
 module.exports = db;
